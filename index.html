@@ -12,19 +12,6 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
-    overflow: hidden;
-}
-
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
-
-h1 {
-    margin-top: 30px;
-    font-size: 24px;
 }
 
 .container {
@@ -46,66 +33,60 @@ button {
     border-radius: 10px;
     background: #6c5ce7;
     color: white;
+    cursor: pointer;
+    margin-bottom: 15px;
 }
 
+#text {
+    margin-top: 15px;
+    font-size: 18px;
+    opacity: 0.9;
+}
 </style>
 </head>
-<body>
 
-<canvas id="bg"></canvas>
+<body>
 
 <h1>Моё видео</h1>
 
 <div class="container">
+
     <button onclick="startVideo()">▶ Смотреть</button>
-    <br><br>
 
     <video id="video" controls>
         <source src="video.mp4" type="video/mp4">
     </video>
+
+    <div id="text"></div>
+
 </div>
 
 <script>
 const video = document.getElementById("video");
-const progress = document.getElementById("progress");
+const textBlock = document.getElementById("text");
 
-// 👉 берём параметр из ссылки
+// параметры из ссылки
 const params = new URLSearchParams(window.location.search);
 const videoSrc = params.get("v");
+const text = params.get("text");
 
-// если есть параметр — используем его
+// установка видео
 if (videoSrc) {
     video.src = videoSrc;
-} else {
-    video.src = "video.mp4"; // запасной вариант
 }
 
-// запуск
+// установка текста под видео
+if (text) {
+    textBlock.innerText = text;
+} else {
+    textBlock.innerText = "Описание видео отсутствует";
+}
+
+// кнопка старт
 function startVideo() {
-    document.querySelector(".start-btn").style.display = "none";
-    document.getElementById("player").style.display = "block";
+    video.style.display = "block";
     video.play();
 }
-
-// play/pause
-function togglePlay() {
-    if (video.paused) video.play();
-    else video.pause();
-}
-
-// mute
-function toggleMute() {
-    video.muted = !video.muted;
-}
-
-// прогресс
-video.addEventListener("timeupdate", () => {
-    progress.value = (video.currentTime / video.duration) * 100;
-});
-
-progress.addEventListener("input", () => {
-    video.currentTime = (progress.value / 100) * video.duration;
-});
 </script>
 
 </body>
