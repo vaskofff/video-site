@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Видео</title>
+    <title>Мои Видео</title>
     <style>
         body {
             margin: 0;
@@ -71,7 +71,7 @@
         <h1>Мои Видео</h1>
         
         <div class="video-wrapper">
-            <video id="player" controls autoplay></video>
+            <video id="player" controls></video>
         </div>
 
         <div class="list" id="list"></div>
@@ -82,7 +82,7 @@ const videos = [
     { title: "СПАСИБО ДАША", file: "video1.mp4" },
     { title: "ПРАЙМ", file: "video2.mp4" },
     { title: "КЛЯНИСЬ", file: "video3.mp4" },
-    { title: "АХАХХА ДАША Я НЕ МОГ НЕ ВСТАВИТЬ СОРИ МЕНЯ ПОРВАЛО", file: "video4.mp4" },
+    { title: "АХАХХА ДАША Я НЕ МОГ НЕ ВСТАВИТЬ", file: "video4.mp4" },
     { title: "СПОКОЙНО!!!", file: "video5.mp4" },
     { title: "ХИВХИХВИХ", file: "video6.MOV" },
     { title: "НУ ПРАВДА ЧТО ЭТО", file: "video7.mp4" },
@@ -97,14 +97,14 @@ const player = document.getElementById('player');
 const list = document.getElementById('list');
 
 function playVideo(file) {
-    const url = `https://raw.githubusercontent.com/vaskofff/video-site/main/${file}`;
-    player.src = url;
-    player.play().catch(() => {});
+    player.src = file;
+    player.load();
+    player.play().catch(e => console.log("Ошибка воспроизведения"));
 }
 
 function renderList() {
     list.innerHTML = '';
-    videos.forEach((video, index) => {
+    videos.forEach(video => {
         const div = document.createElement('div');
         div.className = 'item';
         div.textContent = video.title;
@@ -114,14 +114,13 @@ function renderList() {
             div.classList.add('active');
             playVideo(video.file);
         };
-        
         list.appendChild(div);
     });
 }
 
 renderList();
 
-// Запускаем первое видео автоматически
+// Автозапуск первого видео
 if (videos.length > 0) {
     playVideo(videos[0].file);
     document.querySelector('.item').classList.add('active');
