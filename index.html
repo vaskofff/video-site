@@ -3,127 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои Видео</title>
+    <title>Видео</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background: linear-gradient(135deg, #0a0a0a, #1a0033);
             color: white;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
         h1 {
-            text-align: center;
-            margin: 30px 0 40px;
-            font-size: 2.8rem;
+            margin: 20px 0 30px;
+            font-size: 2.2rem;
             background: linear-gradient(to right, #c445ff, #6c5ce7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .video-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
         video {
             width: 100%;
-            max-width: 920px;
+            max-width: 1000px;
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            background: #000;
-        }
-        .list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-        }
-        .item {
-            width: 100%;
-            max-width: 700px;
-            padding: 16px 22px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            border: 1px solid rgba(108, 92, 231, 0.3);
-        }
-        .item:hover {
-            background: rgba(108, 92, 231, 0.25);
-            transform: translateX(10px);
-        }
-        .active {
-            background: #6c5ce7;
-            border-color: #c445ff;
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Мои Видео</h1>
-        
-        <div class="video-wrapper">
-            <video id="player" controls></video>
-        </div>
-
-        <div class="list" id="list"></div>
-    </div>
+    <h1 id="title">Загрузка...</h1>
+    <video id="player" controls autoplay></video>
 
 <script>
-const videos = [
-    { title: "СПАСИБО ДАША", file: "video1.mp4" },
-    { title: "ПРАЙМ", file: "video2.mp4" },
-    { title: "КЛЯНИСЬ", file: "video3.mp4" },
-    { title: "АХАХХА ДАША Я НЕ МОГ НЕ ВСТАВИТЬ", file: "video4.mp4" },
-    { title: "СПОКОЙНО!!!", file: "video5.mp4" },
-    { title: "ХИВХИХВИХ", file: "video6.MOV" },
-    { title: "НУ ПРАВДА ЧТО ЭТО", file: "video7.mp4" },
-    { title: "СТЕПАШКА", file: "video8.mp4" },
-    { title: "КОНСПИРАЦИЯ", file: "video9.mp4" },
-    { title: "А ХЗ))))", file: "video10.mp4" },
-    { title: "ХАЗВЫХЗА", file: "video11.mp4" },
-    { title: "ПРОГНОЗ НА 40 БАЛЛОВ ПО ПРОФМАТУ", file: "video12.mp4" }
-];
+const urlParams = new URLSearchParams(window.location.search);
+const videoNum = urlParams.get('v');
 
-const player = document.getElementById('player');
-const list = document.getElementById('list');
+const videos = {
+    "1": { title: "СПАСИБО ДАША", file: "video1.mp4" },
+    "2": { title: "ПРАЙМ", file: "video2.mp4" },
+    "3": { title: "КЛЯНИСЬ", file: "video3.mp4" },
+    "4": { title: "АХАХХА ДАША Я НЕ МОГ НЕ ВСТАВИТЬ", file: "video4.mp4" },
+    "5": { title: "СПОКОЙНО!!!", file: "video5.mp4" },
+    "6": { title: "ХИВХИХВИХ", file: "video6.MOV" },
+    "7": { title: "НУ ПРАВДА ЧТО ЭТО", file: "video7.mp4" },
+    "8": { title: "СТЕПАШКА", file: "video8.mp4" },
+    "9": { title: "КОНСПИРАЦИЯ", file: "video9.mp4" },
+    "10": { title: "А ХЗ))))", file: "video10.mp4" },
+    "11": { title: "ХАЗВЫХЗА", file: "video11.mp4" },
+    "12": { title: "ПРОГНОЗ НА 40 БАЛЛОВ ПО ПРОФМАТУ", file: "video12.mp4" }
+};
 
-function playVideo(file) {
-    player.src = file;
-    player.load();
-    player.play().catch(e => console.log("Ошибка воспроизведения"));
-}
+const video = videos[videoNum];
 
-function renderList() {
-    list.innerHTML = '';
-    videos.forEach(video => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.textContent = video.title;
-        
-        div.onclick = () => {
-            document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
-            div.classList.add('active');
-            playVideo(video.file);
-        };
-        list.appendChild(div);
-    });
-}
-
-renderList();
-
-// Автозапуск первого видео
-if (videos.length > 0) {
-    playVideo(videos[0].file);
-    document.querySelector('.item').classList.add('active');
+if (video) {
+    document.getElementById('title').textContent = video.title;
+    const player = document.getElementById('player');
+    player.src = video.file;
+} else {
+    document.getElementById('title').textContent = "Видео не найдено";
 }
 </script>
 </body>
