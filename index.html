@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Видео</title>
+    <title>Мои Видео</title>
     <style>
         body {
             margin: 0;
@@ -14,8 +14,8 @@
             text-align: center;
         }
         h1 {
-            margin: 20px 0 30px;
-            font-size: 2.2rem;
+            margin: 30px 0;
+            font-size: 2.5rem;
             background: linear-gradient(to right, #c445ff, #6c5ce7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -25,12 +25,35 @@
             max-width: 1000px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            margin-bottom: 20px;
+        }
+        .list {
+            max-width: 700px;
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .item {
+            padding: 15px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .item:hover {
+            background: #6c5ce7;
+            transform: scale(1.03);
         }
     </style>
 </head>
 <body>
-    <h1 id="title">Загрузка...</h1>
-    <video id="player" controls autoplay></video>
+    <h1 id="title">Мои Видео</h1>
+    <video id="player" controls></video>
+
+    <div class="list" id="list"></div>
 
 <script>
 const urlParams = new URLSearchParams(window.location.search);
@@ -51,14 +74,23 @@ const videos = {
     "12": { title: "ПРОГНОЗ НА 40 БАЛЛОВ ПО ПРОФМАТУ", file: "video12.mp4" }
 };
 
-const video = videos[videoNum];
-
-if (video) {
-    document.getElementById('title').textContent = video.title;
-    const player = document.getElementById('player');
-    player.src = video.file;
-} else {
-    document.getElementById('title').textContent = "Видео не найдено";
+// Если есть параметр ?v= — показываем одно видео
+if (videoNum && videos[videoNum]) {
+    const v = videos[videoNum];
+    document.getElementById('title').textContent = v.title;
+    document.getElementById('player').src = v.file;
+} 
+// Если нет параметра — показываем список всех видео
+else {
+    const listDiv = document.getElementById('list');
+    Object.keys(videos).forEach(key => {
+        const v = videos[key];
+        const a = document.createElement('a');
+        a.href = `?v=${key}`;
+        a.className = 'item';
+        a.textContent = v.title;
+        listDiv.appendChild(a);
+    });
 }
 </script>
 </body>
