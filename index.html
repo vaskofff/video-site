@@ -66,56 +66,45 @@ button {
 </div>
 
 <script>
+const video = document.getElementById("video");
+const progress = document.getElementById("progress");
+
+// 👉 берём параметр из ссылки
+const params = new URLSearchParams(window.location.search);
+const videoSrc = params.get("v");
+
+// если есть параметр — используем его
+if (videoSrc) {
+    video.src = videoSrc;
+} else {
+    video.src = "video.mp4"; // запасной вариант
+}
+
+// запуск
 function startVideo() {
-    const video = document.getElementById("video");
-    video.style.display = "block";
+    document.querySelector(".start-btn").style.display = "none";
+    document.getElementById("player").style.display = "block";
     video.play();
-    document.querySelector("button").style.display = "none";
 }
 
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for (let i = 0; i < 80; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 2,
-        dx: (Math.random() - 0.5) * 0.5,
-        dy: (Math.random() - 0.5) * 0.5
-    });
+// play/pause
+function togglePlay() {
+    if (video.paused) video.play();
+    else video.pause();
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "white";
-
-    particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        p.x += p.dx;
-        p.y += p.dy;
-
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-    });
-
-    requestAnimationFrame(draw);
+// mute
+function toggleMute() {
+    video.muted = !video.muted;
 }
 
-draw();
+// прогресс
+video.addEventListener("timeupdate", () => {
+    progress.value = (video.currentTime / video.duration) * 100;
+});
 
-window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+progress.addEventListener("input", () => {
+    video.currentTime = (progress.value / 100) * video.duration;
 });
 </script>
 
