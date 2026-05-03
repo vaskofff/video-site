@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Видео</title>
+<title>Видео сайт</title>
 
 <style>
 body {
@@ -26,23 +26,30 @@ video {
     margin-top: 15px;
 }
 
-.buttons {
+.list {
     margin-top: 20px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     gap: 10px;
-    padding: 0 10px;
+    align-items: center;
 }
 
-button {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 8px;
-    background: #6c5ce7;
-    color: white;
+.item {
+    width: 90%;
+    max-width: 600px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #1c1c1c;
     cursor: pointer;
-    font-size: 14px;
+    transition: 0.2s;
+}
+
+.item:hover {
+    background: #333;
+}
+
+.active {
+    background: #6c5ce7;
 }
 </style>
 </head>
@@ -55,14 +62,14 @@ button {
     <source id="source" src="" type="video/mp4">
 </video>
 
-<div class="buttons" id="buttons"></div>
+<div class="list" id="list"></div>
 
 <script>
 const video = document.getElementById("video");
 const source = document.getElementById("source");
-const buttons = document.getElementById("buttons");
+const list = document.getElementById("list");
 
-// 📦 список видео
+// 📦 видео
 const videos = [
     { file: "video1.mp4", title: "СПАСИБО ДАША" },
     { file: "video2.mp4", title: "ПРАЙМ" },
@@ -78,21 +85,33 @@ const videos = [
     { file: "video12.mp4", title: "ПРОГНОЗ НА 40 БАЛЛОВ ПО ПРОФМАТУ" }
 ];
 
+let activeIndex = null;
+
 // ▶ загрузка видео
-function loadVideo(index) {
+function loadVideo(i) {
     video.style.display = "block";
-    source.src = videos[index].file;
+    source.src = videos[i].file;
     video.load();
     video.play();
+
+    activeIndex = i;
+    renderList();
 }
 
-// 🔘 создаём кнопки автоматически
-videos.forEach((v, i) => {
-    const btn = document.createElement("button");
-    btn.innerText = v.title;
-    btn.onclick = () => loadVideo(i);
-    buttons.appendChild(btn);
-});
+// 📋 список
+function renderList() {
+    list.innerHTML = "";
+
+    videos.forEach((v, i) => {
+        const div = document.createElement("div");
+        div.className = "item" + (i === activeIndex ? " active" : "");
+        div.innerText = v.title;
+        div.onclick = () => loadVideo(i);
+        list.appendChild(div);
+    });
+}
+
+renderList();
 </script>
 
 </body>
